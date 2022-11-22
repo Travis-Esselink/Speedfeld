@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom'
+import Type from './components/Type'
+import './App.css'
 
 function App() {
+  const [quotes, setQuotes] = useState([])
+
+
+  useEffect(() => {
+    const getQuotes = async () => {
+      const res = await fetch('/api/quotes')
+      const data = await res.json()
+      setQuotes(data)
+    }
+    getQuotes()
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path='/' element={<Type quotes={quotes} />} ></Route>
+      </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

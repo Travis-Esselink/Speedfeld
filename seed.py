@@ -1945,14 +1945,14 @@ seinfeld_quotes = [
 "image": ""
 },
 {
-"quote": " Yeah that's going to be a problem. It's gonna be a problem for them. This a clear violation of your rights as a consumer. It's an infringement on your constitutional rights. It's outrageous, egregious, preposterous.",
+"quote": "Yeah that's going to be a problem. It's gonna be a problem for them. This a clear violation of your rights as a consumer. It's an infringement on your constitutional rights. It's outrageous, egregious, preposterous.",
 "author": "Jackie",
 "season": "7",
 "episode": "3",
 "image": ""
 },
 {
-"quote": " You put the balm on? Who told you to put the balm on? I didn't tell you to put the balm on. Why'd  you put the balm on? You haven't even been to see the doctor. If your gonna put a balm on, let a doctor put a balm on.",
+"quote": "You put the balm on? Who told you to put the balm on? I didn't tell you to put the balm on. Why'd  you put the balm on? You haven't even been to see the doctor. If your gonna put a balm on, let a doctor put a balm on.",
 "author": "Jackie",
 "season": "7",
 "episode": "3",
