@@ -1,15 +1,15 @@
 
 
-
-
 .words {
   display: flex;
   flex-wrap: wrap;
-  max-width:800px;
+  width: 800px;
+  max-height: 500px;
   margin: 200px auto 50px auto;
 }
 
 .main-container {
+  max-width: 800px;
   margin: 0px auto;
   text-align: center;
 }
@@ -18,12 +18,41 @@
   margin: 0px auto;
 }
 
-.word {
-  display: flex;
-  margin-right: 0.4rem;
-  padding: 0px 10px 15px 0px;
+letter {
+
   font-family: 'Courier New', Courier, monospace;
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 600;
+  max-height: 1rem;
+  padding-bottom: 15px;
+  color: rgb(169, 169, 169);
+}
+
+.correct {
+  color: black;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 24px;
+  font-weight: 600;
   max-height: 1rem;
 }
+
+.incorrect {
+  color: rgb(255, 122, 122);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 24px;
+  font-weight: 600;
+  max-height: 1rem;
+}
+
+.text-box {
+  height: 400px;
+  width: 800px;
+  position: relative;
+  bottom: 300px;
+  opacity: 0%;
+}
+
+div {
+  white-space: pre-wrap;
+}
+

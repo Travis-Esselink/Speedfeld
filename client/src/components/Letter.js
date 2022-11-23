@@ -1,11 +1,16 @@
 
-const Letter = ({ letter }) => {
-  
+const Letter = ({ letter, fieldArray, charArray, letterIndex }) => {
+
+//   console.log(letter, letterIndex)
+
     return (
-        <div className="letter">
-       {letter}
-        
+   
+            <div className="">
+            
+            {letter}
+
         </div>
+        
     )
 
 }
