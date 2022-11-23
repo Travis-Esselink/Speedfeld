@@ -103,11 +103,6 @@ const Type = ({ quotes }) => {
     const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
 
 
-
-console.log(finished)
-
-
-
     return (
         <div className="main-container">
             <div className="words-container">
@@ -124,7 +119,7 @@ console.log(finished)
                     </span>
                 </div>
 
-                { finalWPM !== Infinity && dynamicWPM !== NaN ? <p className="dynamic">WPM: {finished === true ? finalWPM : dynamicWPM}</p> : null}
+                { isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
 
 
 
@@ -189,8 +184,8 @@ console.log(finished)
 
             </div>
             <button onClick={SelectQuote}>RESET</button>
-            <button onClick={handleStart}>timer</button>
-            <button onClick={handlePauseResume}>stop</button>
+            {/* <button onClick={handleStart}>timer</button>
+            <button onClick={handlePauseResume}>stop</button> */}
         </div>
     )
 }

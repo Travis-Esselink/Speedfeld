@@ -31,7 +31,7 @@ letter {
 }
 
 .correct {
-  color: black;
+  color: rgb(28, 27, 27);
   font-family: 'Courier New', Courier, monospace;
   font-size: 24px;
   font-weight: 600;
@@ -56,7 +56,7 @@ letter {
 
 
 .current {
-  border-left: 2px #2d2d2d solid;
+  border-left: 2px #a70b0b solid;
   
     
     animation: blink 1s;
@@ -68,5 +68,9 @@ letter {
 
 div {
   white-space: pre-wrap;
+}
+
+.WPM {
+  font-size: 30px;
 }
 
