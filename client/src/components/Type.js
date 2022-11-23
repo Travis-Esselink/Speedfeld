@@ -6,7 +6,7 @@ import Word from './Word'
 
 
 const Type = ({ quotes }) => {
-    let finished = false
+    const [finished, setFinished] = useState(false)
     const [field, setField] = useState('')
     const data = quotes[Math.floor(Math.random() * quotes.length)]
     const [quote, setQuote] = useState({
@@ -15,7 +15,10 @@ const Type = ({ quotes }) => {
         "season": '',
         "episode": ''
     })
-    const [time, setTime] = useState("")
+
+    const [isActive, setIsActive] = useState(false);
+    const [isPaused, setIsPaused] = useState(true);
+    const [time, setTime] = useState(0);
     const fieldList = field.split("")
     const quoteList = quote.text.split("")
     const quoteListWords = quote.text.split(" ")
@@ -23,60 +26,56 @@ const Type = ({ quotes }) => {
 
 
     const handleChange = (event) => {
+        handleStart()
         const { value } = event.target
         let updatedField = { ...field }
         updatedField = value
         setField(updatedField)
     }
 
-    // timer variables
-    let startingTime = 0
-    let elapsedTime = 0
-    let currentTime = 0
-    let stopped = false
-    let intervalId
-    let mins = 0
-    let secs = 0
-    let mili = 0
-
+ // SELECT QUOTE / RESET 
     const SelectQuote = () => {
         setQuote(data)
         setField('')
-        stopped = true
+        handleReset()
+        setFinished(false)
     }
 
+// TIMER
+    useEffect(() => {
+        let interval = null;
 
-    const timer = () => {
-        const elapsedTime = Date.now() - startingTime
-
-        mili = Math.floor(elapsedTime / 75)
-        secs = Math.floor((elapsedTime / 1000) % 60)
-        mins = Math.floor((elapsedTime / (1000 * 60)) % 60)
-
-        setTime(`${mins}min ${secs}.${mili}secs`)
-    }
-
-    function timerStart() {
-        if (stopped === true) {
-            stopped = false
-            startingTime = Date.now() - elapsedTime
-            intervalId = setInterval(timer, 100)
+        if (isActive && isPaused === false) {
+            interval = setInterval(() => {
+                setTime((time) => time + 10);
+            }, 10);
+        } else {
+            clearInterval(interval);
         }
+        return () => {
+            clearInterval(interval);
+        };
+    }, [isActive, isPaused]);
 
+    const handleStart = () => {
+        setIsActive(true);
+        setIsPaused(false);
+    };
 
-    }
+    const handlePauseResume = () => {
+        setIsPaused(!isPaused);
+    };
 
-    const timerStop = () => {
-        if(!stopped) {
-            stopped = true
-            elapsedTime = Date.now() - startingTime
-            clearInterval(intervalId)
-        }
+    const handleReset = () => {
+        setIsActive(false);
+        setTime(0);
+    };
 
-    }
+    let min = (Math.floor((time / 60000) % 60))
+    let sec = (Math.floor((time / 1000) % 60))
+    let mili = (((time / 10) % 100))
 
-
-
+// CHECK IF COMPLETED
     const checkCorrect = () => {
         let count = 0
         quoteList.forEach((char, index) => {
@@ -85,37 +84,61 @@ const Type = ({ quotes }) => {
             }
         })
         if (count === quoteList.length) {
+            handlePauseResume()
+            setFinished(true)
 
             setField('')
             const finAlert = () => {
-                alert("finished!")
+                alert(`${finalWPM} WPM, not bad!`)
             }
             setTimeout(finAlert, 300)
-            finished = true
+            
         }
     }
 
     checkCorrect()
 
+    const totalTime = Number(`${min * 60 + sec}.${mili}`)
+    const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
+    const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
 
 
-    
+
+console.log(finished)
+
+
 
     return (
         <div className="main-container">
             <div className="words-container">
 
-                <p>{time}</p>
+                <div className="timer">
+                    <span className="digits">
+                        {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
+                    </span>
+                    <span className="digits">
+                        {("0" + Math.floor((time / 1000) % 60)).slice(-2)}.
+                    </span>
+                    <span className="digits mili-sec">
+                        {("0" + ((time / 10) % 100)).slice(-2)}
+                    </span>
+                </div>
+
+                { finalWPM !== Infinity && dynamicWPM !== NaN ? <p className="dynamic">WPM: {finished === true ? finalWPM : dynamicWPM}</p> : null}
+
 
 
                 <div className="words">
 
                     {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
                         return (
-                            <letter className={fieldList[letterIndex] === letter ? "correct" : fieldList[letterIndex] === undefined || null ? "" : "incorrect"} >
+                            <>
+                            <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : fieldList[letterIndex] === undefined || null ? "" : "incorrect"} >
                                 {letter}
-
                             </letter>
+                           
+                            </>
+                            
                         )
                     })}
 
@@ -166,8 +189,8 @@ const Type = ({ quotes }) => {
 
             </div>
             <button onClick={SelectQuote}>RESET</button>
-            <button onClick={timerStart}>timer</button>
-            <button onClick={timerStop}>stop</button>
+            <button onClick={handleStart}>timer</button>
+            <button onClick={handlePauseResume}>stop</button>
         </div>
     )
 }
