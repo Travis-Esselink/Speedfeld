@@ -2,10 +2,11 @@ import Words from './Words'
 import { useState, useEffect } from 'react'
 import Letter from './Letter'
 import Word from './Word'
+import LogoutButton from './LogoutButton'
 
 
 
-const Type = ({ quotes }) => {
+const Type = ({ quotes, user, setUser, userFetched }) => {
     const [finished, setFinished] = useState(false)
     const [field, setField] = useState('')
     const data = quotes[Math.floor(Math.random() * quotes.length)]
@@ -33,7 +34,7 @@ const Type = ({ quotes }) => {
         setField(updatedField)
     }
 
- // SELECT QUOTE / RESET 
+    // SELECT QUOTE / RESET 
     const SelectQuote = () => {
         setQuote(data)
         setField('')
@@ -41,7 +42,7 @@ const Type = ({ quotes }) => {
         setFinished(false)
     }
 
-// TIMER
+    // TIMER
     useEffect(() => {
         let interval = null;
 
@@ -75,7 +76,7 @@ const Type = ({ quotes }) => {
     let sec = (Math.floor((time / 1000) % 60))
     let mili = (((time / 10) % 100))
 
-// CHECK IF COMPLETED
+    // CHECK IF COMPLETED
     const checkCorrect = () => {
         let count = 0
         quoteList.forEach((char, index) => {
@@ -91,8 +92,8 @@ const Type = ({ quotes }) => {
             const finAlert = () => {
                 alert(`${finalWPM} WPM, not bad!`)
             }
-            setTimeout(finAlert, 300)
-            
+            // setTimeout(finAlert, 300)
+
         }
     }
 
@@ -101,86 +102,44 @@ const Type = ({ quotes }) => {
     const totalTime = Number(`${min * 60 + sec}.${mili}`)
     const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
     const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
-
+console.log(fieldList)
 
     return (
         <div className="main-container">
             <div className="words-container">
+                {userFetched && user ? <span>Logged in as: {user.username}<LogoutButton user={user} setUser={setUser} /> </span>  : <button>create account</button>} 
 
                 <div className="timer">
-                    <span className="digits">
-                        {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
-                    </span>
-                    <span className="digits">
-                        {("0" + Math.floor((time / 1000) % 60)).slice(-2)}.
-                    </span>
-                    <span className="digits mili-sec">
-                        {("0" + ((time / 10) % 100)).slice(-2)}
-                    </span>
+
+                    <p>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}min {("0" + Math.floor((time / 1000) % 60)).slice(-2)}.{("0" + Math.floor((time / 1000) % 60)).slice(-2)}sec</p>
+
                 </div>
 
-                { isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
-
-
+                {isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
 
                 <div className="words">
 
                     {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
                         return (
                             <>
-                            <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : fieldList[letterIndex] === undefined || null ? "" : "incorrect"} >
-                                {letter}
-                            </letter>
-                           
+                                <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : fieldList[letterIndex] === undefined || null ? "" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
+                                    {letter}
+                                </letter>
+
                             </>
-                            
+
                         )
                     })}
 
                 </div>
 
-                {/* {testArr.join(" ").split("").map((char) =>{
-                        return (
-                            <div>
-                            {char}
-                            </div>
-                        )
+                <div className="input-container">
+                    <input className="text-box" id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} />
+                    <div className="blur"></div>
+                </div>
 
-                    })} */}
-
-
-
-
-
-                {/* {quoteListWords.map((word) => {
-                        return (
-
-                            <div className="word">
-                                {word.split("").map((letter, letterIndex) => {
-                                
-                                    return (
-                                        <div className="letter">
-            
-                                        {letter}
-                            
-                                    </div>
-                                    )
-                                }
-                                )}
-                            </div>
-
-                        )
-                    })} */}
-
-
-
-                {/* <Words quote={quote.text} field={field}>
-
-                </Words> */}
                 <p>{quote.author}</p>
                 <p>Season {quote.season} - Episode {quote.episode}</p>
-
-                <input className="text-box" id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} />
 
             </div>
             <button onClick={SelectQuote}>RESET</button>

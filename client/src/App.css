@@ -3,13 +3,14 @@
 .words {
   display: flex;
   flex-wrap: wrap;
-  width: 800px;
-  max-height: 500px;
+  max-width: 800px;
   margin: 200px auto 50px auto;
+  padding: 0px 50px; 
+
 }
 
 .main-container {
-  max-width: 800px;
+  max-width: 850px;
   margin: 0px auto;
   text-align: center;
 }
@@ -31,7 +32,7 @@ letter {
 }
 
 .correct {
-  color: rgb(28, 27, 27);
+  color: rgb(80, 80, 80);
   font-family: 'Courier New', Courier, monospace;
   font-size: 24px;
   font-weight: 600;
@@ -39,25 +40,63 @@ letter {
 }
 
 .incorrect {
-  color: rgb(197, 108, 108);
+  color: rgb(214, 143, 143);
   font-family: 'Courier New', Courier, monospace;
   font-size: 24px;
   font-weight: 600;
   max-height: 1rem;
 }
 
+.space-incorrect {
+  background-color: #a70b0b;
+  border-radius: 4px;
+  opacity: 15%;
+  height: 6px;
+  margin: 4px 2px 0px 2px;
+  
+}
+
 .text-box {
-  height: 400px;
-  width: 800px;
+  height: 350px;
+  width: 900px;
+  max-width: 100%;  
   position: relative;
-  bottom: 300px;
+  bottom: 350px;
+  opacity: 100%;
+  background: url(https://png2.cleanpng.com/sh/817b163d77257b92a0f1f3f3c89e44d4/L0KzQYm3U8I6N6ZtfZH0aYP2gLBuTfJtaZRwRdN3ZD36eLr7hb1ud590e9p7b33oPbj5);
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0;
+  backdrop-filter: blur(5px);
+  color:  rgba(255, 255, 255, 0.00);;
+  word-break:break-all;
+  
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+
+}
+
+.input-container {
+  height: 10px;
+}
+
+.text-box:focus {
   opacity: 0%;
+}
+
+.blur {
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(8px); 
+  height: 100%;
+	width: 50%;
 }
 
 
 .current {
   border-left: 2px #a70b0b solid;
-  
+  line-height: 1.1;
     
     animation: blink 1s;
     animation-iteration-count: infinite;
