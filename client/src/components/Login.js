@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 const initialState = { username: '', password: '' }
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, setOpenLogin, modalRef }) => {
   const [fields, setFields] = useState(initialState)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -40,25 +40,35 @@ const Login = ({ setUser }) => {
 
 return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="login-username">Username</label>
+      <label className="label-class" htmlFor="login-username">Username</label>
       <input
         onChange={handleChange}
         value={fields.username}
         name="username"
         id="login-username"
-        type="text" />
+        type="text" 
+        className="login-input"
+        autoComplete="off"
+        placeholder='Username'
+        required={true} />
 
-      <label htmlFor="login-password">Password</label>
+      <label className="label-class" htmlFor="login-password"></label>
       <input
         onChange={handleChange}
         value={fields.password}
         name="password"
         id="login-password"
-        type="Password" />
-      <input type="submit" value="Login" />
+        type="Password" 
+        className="login-input"
+        autoComplete="off"
+        placeholder='Password'
+        required={true} />
+      <input id="loginbut" className="login-input" type="submit" value="Login" />
     </form>
   )
 
 }
 
 export default Login
+
+

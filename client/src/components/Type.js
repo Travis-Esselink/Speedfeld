@@ -1,8 +1,17 @@
-import Words from './Words'
-import { useState, useEffect } from 'react'
-import Letter from './Letter'
-import Word from './Word'
+
+import { useState, useEffect, useRef } from 'react'
 import LogoutButton from './LogoutButton'
+import ModalReg from './ModalReg'
+import ModalLogin from './ModalLogin'
+import Loading from './Loading'
+import sketch from '../images/sketch.png'
+import mainLogo from '../images/TYPERUNNER2.png'
+import bwLogo from '../images/TRBW.png'
+import loginPic from "../images/log-in.png"
+import reload from "../images/reload.png"
+import signUp from "../images/signup.png"
+
+
 
 
 
@@ -10,21 +19,22 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     const [finished, setFinished] = useState(false)
     const [field, setField] = useState('')
     const data = quotes[Math.floor(Math.random() * quotes.length)]
-    const [quote, setQuote] = useState({
-        "text": "Press reset to start because initial state is cooked.",
-        "author": '',
-        "season": '',
-        "episode": ''
-    })
-
     const [isActive, setIsActive] = useState(false);
     const [isPaused, setIsPaused] = useState(true);
     const [time, setTime] = useState(0);
+
+
+
+    const [quote, setQuote] = useState({
+        "text": "Quite an experience to live in fear, isn't it? That's what it is to be a slave.",
+        "author": 'Batty',
+    })
+
+
+
     const fieldList = field.split("")
     const quoteList = quote.text.split("")
     const quoteListWords = quote.text.split(" ")
-    const fieldListWords = field.split(" ")
-
 
     const handleChange = (event) => {
         handleStart()
@@ -76,6 +86,10 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     let sec = (Math.floor((time / 1000) % 60))
     let mili = (((time / 10) % 100))
 
+    const totalTime = Number(`${min * 60 + sec}.${mili}`)
+    const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
+    const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
+
     // CHECK IF COMPLETED
     const checkCorrect = () => {
         let count = 0
@@ -87,65 +101,123 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
         if (count === quoteList.length) {
             handlePauseResume()
             setFinished(true)
-
             setField('')
-            const finAlert = () => {
-                alert(`${finalWPM} WPM, not bad!`)
+            if (user) {
+                // user.tests += 1
+                // user.sumWPM += {finalWPM}
             }
-            // setTimeout(finAlert, 300)
+
 
         }
     }
 
     checkCorrect()
 
-    const totalTime = Number(`${min * 60 + sec}.${mili}`)
-    const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
-    const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
-console.log(fieldList)
+
+
+    const modalRegRef = useRef()
+    const modalLoginRef = useRef()
+    const modalStatsRef = useRef()
+    const modalLeaderRef = useRef()
+
+
+
+
 
     return (
-        <div className="main-container">
-            <div className="words-container">
-                {userFetched && user ? <span>Logged in as: {user.username}<LogoutButton user={user} setUser={setUser} /> </span>  : <button>create account</button>} 
+        <>
+            <div id="stars"></div>
+            <div id="stars2"></div>
+            <div id="stars3"></div>
 
-                <div className="timer">
 
-                    <p>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}min {("0" + Math.floor((time / 1000) % 60)).slice(-2)}.{("0" + Math.floor((time / 1000) % 60)).slice(-2)}sec</p>
 
-                </div>
 
-                {isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
+            {/* {!userFetched ? <Loading /> : */}
+            <>
 
-                <div className="words">
 
-                    {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
-                        return (
-                            <>
-                                <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : fieldList[letterIndex] === undefined || null ? "" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
-                                    {letter}
-                                </letter>
 
-                            </>
+                <ModalReg ref={modalRegRef} user={user} setUser={setUser}><p>Hello world</p></ModalReg>
+                <ModalLogin ref={modalLoginRef} user={user} setUser={setUser} userFetched={userFetched}></ModalLogin>
 
-                        )
-                    })}
 
-                </div>
 
-                <div className="input-container">
+                <div className="main-container">
+                    <div className="logo-div">
+                        <img className='main-logo' src={bwLogo} />
+                    </div>
+                    <div className="buttons-div">
+                    {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
+                    {userFetched && user && <LogoutButton user={user} setUser={setUser} />}
+                    {!user && <a id="login" className="login-logout-button" href="#" onClick={() => modalLoginRef.current.openLogin()}>
+                        <img className="icon-login"  src={loginPic} />
+                        </a>}
+                    {!user && <a id="register" className="login-logout-button" href="#" onClick={() => modalRegRef.current.openRegister()}>
+                        <img className="icon-signup"  src={signUp} />
+                        </a>}
+                        </div>
+
+
+
+                    <div className="timer-wpm">
+                    {isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
+                     { isActive &&  <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span> {(Math.floor((time / 1000) % 60))}.<span className="smalltime">{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>} 
+                        
+                    </div>
+
+
+                  
+
+                    <div className="words-container">
+
+
+
+                        <div className="words">
+
+
+
+                            {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
+                                return (
+                                    <>
+                                        <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : letter === " " && fieldList[letterIndex] === undefined || null ? "space" : fieldList[letterIndex] === undefined || null ? "" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
+                                            {letter}
+                                        </letter>
+                                        {letter[letterIndex + 1] === " " && <div></div>}
+
+                                    </>
+
+                                )
+                            })}
+
+                        </div>
+
+
+
+                       
+                        <div className="author">
+                            <p class> - {quote.author}</p>
+
+                        </div>
+                       
+                            
+                     
+
+                    </div>
                     <input className="text-box" id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} />
-                    <div className="blur"></div>
+                            <div className="blur"></div>
+                    <a href="#" className="reset-button" onClick={SelectQuote}>
+                        <img className="icon-reset" src={reload} />
+                    </a>
+                    <div className="image-div">
+                        {/* <img className="sketch-img" src={sketch} /> */}
+                    </div>
+
                 </div>
 
-                <p>{quote.author}</p>
-                <p>Season {quote.season} - Episode {quote.episode}</p>
-
-            </div>
-            <button onClick={SelectQuote}>RESET</button>
-            {/* <button onClick={handleStart}>timer</button>
-            <button onClick={handlePauseResume}>stop</button> */}
-        </div>
+            </>
+            {/* } */}
+        </>
     )
 }
 

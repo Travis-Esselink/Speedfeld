@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Routes, Route, useFetcher } from 'react-router-dom'
+import logoutPic from "../images/logout.png"
 
 
 const LogoutButton = ({setUser}) => {
@@ -17,7 +17,9 @@ const LogoutButton = ({setUser}) => {
     return (
         <>
        
-            <button onClick={handleClick}>Logout</button>
+            <a href="#" className="login-logout-button" onClick={handleClick}>
+                <img className="icon-logout" src={logoutPic} />
+            </a>
        
         </>
     )
