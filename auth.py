@@ -10,7 +10,7 @@ auth_router = Blueprint(__name__, 'auth')
 def login_required(fn):
     @wraps(fn)
     def check_login(*args, **kwargs):
-        if not session.net('current_user', None):
+        if not session.get('current_user', None):
             abort(403, "login required")
         return fn(*args, **kwargs)
     return check_login
@@ -73,4 +73,26 @@ def verify():
         'status': 'success',
         'message': 'User verified',
         'user': current_user
+    })
+
+@auth_router.route('/updateuser/', methods=['PUT'])
+def update():
+    current_user = session.get('current_user', None)
+    tests = request.get_json()
+    user = User.query.get(current_user["id"])
+    user.tests = tests["tests"]
+    db.session.add(user)
+    db.session.commit()
+    db.session.refresh(user)
+    print(user)
+    
+    
+
+
+    if not current_user:
+        abort(404, 'User not found')
+    return jsonify({
+        'status': 'success',
+        'message': 'User updated',
+        'user': current_user,
     })

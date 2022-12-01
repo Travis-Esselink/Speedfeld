@@ -92,7 +92,7 @@ const CreateAccount = ({ setUser }) => {
                 {errorPassword && <p className="text-muted">{errorPassword}</p>}
         
 
-            <input id="regobut"className="login-input" type="submit" value="Create Account"/>
+            <input id="regobut" className="login-input" type="submit" value="Create Account"/>
               
 
         </form>

@@ -40,7 +40,7 @@ const Login = ({ setUser, setOpenLogin, modalRef }) => {
 
 return (
     <form onSubmit={handleSubmit}>
-      <label className="label-class" htmlFor="login-username">Username</label>
+      <label className="label-class" htmlFor="login-username"></label>
       <input
         onChange={handleChange}
         value={fields.username}

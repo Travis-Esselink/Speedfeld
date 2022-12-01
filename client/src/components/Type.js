@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 import LogoutButton from './LogoutButton'
 import ModalReg from './ModalReg'
 import ModalLogin from './ModalLogin'
@@ -10,27 +11,22 @@ import bwLogo from '../images/TRBW.png'
 import loginPic from "../images/log-in.png"
 import reload from "../images/reload.png"
 import signUp from "../images/signup.png"
-
-
-
-
+import _ from 'lodash'
 
 const Type = ({ quotes, user, setUser, userFetched }) => {
     const [finished, setFinished] = useState(false)
     const [field, setField] = useState('')
-    const data = quotes[Math.floor(Math.random() * quotes.length)]
     const [isActive, setIsActive] = useState(false);
     const [isPaused, setIsPaused] = useState(true);
     const [time, setTime] = useState(0);
 
-
+    const data = _.sample(quotes)
+    const navigate = useNavigate()
 
     const [quote, setQuote] = useState({
         "text": "Quite an experience to live in fear, isn't it? That's what it is to be a slave.",
         "author": 'Batty',
     })
-
-
 
     const fieldList = field.split("")
     const quoteList = quote.text.split("")
@@ -46,10 +42,12 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
 
     // SELECT QUOTE / RESET 
     const SelectQuote = () => {
+        navigate('/')
         setQuote(data)
         setField('')
         handleReset()
         setFinished(false)
+        inputRef.current.focus()
     }
 
     // TIMER
@@ -89,6 +87,23 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     const totalTime = Number(`${min * 60 + sec}.${mili}`)
     const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
     const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
+// add test result to tests table
+    const updateUserTests = async () => {
+        const res = await fetch('/api/updatetests', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: user.id,
+                user_name: user.username,
+                WPM: finalWPM
+            })
+        })
+        const data = await res.json()
+        navigate('/')
+        console.log(data)
+    }
 
     // CHECK IF COMPLETED
     const checkCorrect = () => {
@@ -102,12 +117,9 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
             handlePauseResume()
             setFinished(true)
             setField('')
-            if (user) {
-                // user.tests += 1
-                // user.sumWPM += {finalWPM}
+            if (userFetched && user) {
+                updateUserTests()
             }
-
-
         }
     }
 
@@ -119,10 +131,10 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     const modalLoginRef = useRef()
     const modalStatsRef = useRef()
     const modalLeaderRef = useRef()
+    const inputRef = useRef(null)
 
 
-
-
+    console.log(user)
 
     return (
         <>
@@ -131,11 +143,7 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
             <div id="stars3"></div>
 
 
-
-
-            {/* {!userFetched ? <Loading /> : */}
             <>
-
 
 
                 <ModalReg ref={modalRegRef} user={user} setUser={setUser}><p>Hello world</p></ModalReg>
@@ -148,34 +156,23 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
                         <img className='main-logo' src={bwLogo} />
                     </div>
                     <div className="buttons-div">
-                    {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
-                    {userFetched && user && <LogoutButton user={user} setUser={setUser} />}
-                    {!user && <a id="login" className="login-logout-button" href="#" onClick={() => modalLoginRef.current.openLogin()}>
-                        <img className="icon-login"  src={loginPic} />
+                        {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
+                        {userFetched && user && <LogoutButton user={user} setUser={setUser} />}
+                        {!user && <a id="login" className="login-logout-button" href="#" onClick={() => modalLoginRef.current.openLogin()}>
+                            <img className="icon-login" src={loginPic} />
                         </a>}
-                    {!user && <a id="register" className="login-logout-button" href="#" onClick={() => modalRegRef.current.openRegister()}>
-                        <img className="icon-signup"  src={signUp} />
+                        {!user && <a id="register" className="login-logout-button" href="#" onClick={() => modalRegRef.current.openRegister()}>
+                            <img className="icon-signup" src={signUp} />
                         </a>}
-                        </div>
-
-
-
-                    <div className="timer-wpm">
-                    {isActive && <p className="WPM">WPM: {finished === true ? finalWPM : dynamicWPM}</p>}
-                     { isActive &&  <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span> {(Math.floor((time / 1000) % 60))}.<span className="smalltime">{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>} 
-                        
                     </div>
 
-
-                  
+                    <div className="timer-wpm">
+                        {isActive && <p className="WPM"> {finished === true ? finalWPM : dynamicWPM} wpm</p>}
+                        {isActive && <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span> {(Math.floor((time / 1000) % 60))}.<span className="smalltime">{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>}
+                    </div>
 
                     <div className="words-container">
-
-
-
                         <div className="words">
-
-
 
                             {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
                                 return (
@@ -192,20 +189,13 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
 
                         </div>
 
-
-
-                       
                         <div className="author">
-                            <p class> - {quote.author}</p>
-
+                            <p> - {quote.author}</p>
                         </div>
-                       
-                            
-                     
 
                     </div>
-                    <input className="text-box" id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} />
-                            <div className="blur"></div>
+                    <input autoFocus className="text-box" ref={inputRef} id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} onPaste={(e)=>{e.preventDefault()}} />
+                    <div className="blur"></div>
                     <a href="#" className="reset-button" onClick={SelectQuote}>
                         <img className="icon-reset" src={reload} />
                     </a>
@@ -228,3 +218,6 @@ export default Type
 // set state by index, set conditional classname by index
 
 //active char set classname on letterdiv
+
+
+

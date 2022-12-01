@@ -36,14 +36,12 @@ function App() {
     getLoggedInUser()
   }, [])
 
-
-
   return (
     <div className="App">
       <Routes>
         <Route path='/' element={<Type quotes={quotes} user={user} setUser={setUser} userFetched={userFetched}/>} ></Route>
         <Route path='/login/' element={<Login setUser={setUser} /> }></Route>
-        <Route path='/profile' element={<UserProfile user={user} setUser={setUser} userFetched/>}></Route>
+        <Route path='/profile' element={<UserProfile user={user} setUser={setUser} userFetched={userFetched}/>}></Route>
         <Route path='/register' element={<Register user={user} setUser={setUser}/>}></Route>
       </Routes>
     </div>
