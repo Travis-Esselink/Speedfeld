@@ -1,14 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, forwardRef, useImperativeHandle } from 'react'
-import Register from './Register'
+import LeaderBoard from "./LeaderBoard"
+import topScoresPic from "../images/top-scores3.png"
 
-const ModalReg = forwardRef((props, ref) => {
-    const [openReg, setOpenReg] = useState(false)
+const ModalLeaderboard = forwardRef((props, ref) => {
+    const [openLead, setOpenLead] = useState(false)
 
     useImperativeHandle(ref, () => {
         return {
-            openRegister: () => setOpenReg(true),
-            closeRegister: () => setOpenReg(false),
+            openLeaderboard: () => setOpenLead(true),
+            closeLeaderboard: () => setOpenLead(false),
         }
     })
 
@@ -16,7 +17,7 @@ const ModalReg = forwardRef((props, ref) => {
         <>
 
             <AnimatePresence>
-                {openReg &&
+                {openLead &&
 
                     <>
 
@@ -36,7 +37,7 @@ const ModalReg = forwardRef((props, ref) => {
                                     delay: 0.3
                                 }
                             }}
-                            onClick={() => setOpenReg(false)}
+                            onClick={() => setOpenLead(false)}
                             className="modal-backdrop">
 
                             <motion.div
@@ -56,16 +57,18 @@ const ModalReg = forwardRef((props, ref) => {
                                     },
                                 }}
                                 onClick={(e) => {
-                                    if (e.currentTarget === e.target || e.target.id === "regobut" || e.target.id === "register-username" || e.target.id ===  "register-password" || e.target.id === "register-confirm-password" || e.target.className === "modal-content-wrapper" || e.target.className === "modal-content" || e.target.className === "login-reg-form") {
+                                    if (e.currentTarget === e.target || e.target.className === "modal-content-wrapper" || e.target.className === "modal-content" || e.target.className === "leaderboard-rank" || e.target.className === "leader-modal-content" || e.target.className === "leaderboard-item" || e.target.className === "leaderboard-small-text") {
                                         e.stopPropagation()
-                                    } 
-                            
-                                    
+                                    }
+
+
                                 }}
 
-                                
-                                className="modal-content-wrapper">
+                
 
+
+                                className="modal-content-wrapper">
+                                <img className="modal-pic" src={topScoresPic} />
                                 <motion.div
                                     initial={{
                                         x: 100,
@@ -87,9 +90,11 @@ const ModalReg = forwardRef((props, ref) => {
                                         }
 
                                     }}
-                                    className="modal-content">
 
-                                    <Register user={props.user} setUser={props.setUser} setOpenReg={setOpenReg} />
+                                    className="leader-modal-content">
+
+
+                                    <LeaderBoard />
 
                                 </motion.div>
 
@@ -105,4 +110,4 @@ const ModalReg = forwardRef((props, ref) => {
 }
 )
 
-export default ModalReg
+export default ModalLeaderboard

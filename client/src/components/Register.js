@@ -1,10 +1,11 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import regPic from "../images/register-title.png"
 
 const initialState = { username: '', password: '', confirmPassword: '' }
 
-const CreateAccount = ({ setUser }) => {
+const CreateAccount = ({ setUser, setOpenReg }) => {
     const [fields, setFields] = useState(initialState) 
     const [errorPassword, setErrorPassword] = useState(null) 
     const [errorRegister, setErrorRegister] = useState(null) 
@@ -38,27 +39,35 @@ const CreateAccount = ({ setUser }) => {
                 body: JSON.stringify(fields)
             })
             const data = await res.json()
-            if (res.status === 403) {
-                setErrorRegister(data)
+            if (!handleSubmit) {
+                setErrorRegister(true)
+                console.log(errorRegister)
             } else if (res.status === 200) {
                 setErrorRegister(null)
+                setOpenReg(false)
                 setUser(data.user) 
                 navigate('/')
+                setFields(initialState)
     
             }
-            setFields(initialState)
+            
         }
     }
 
+    
+
     return (
 
-
-
-        <form onSubmit={handleSubmit}>
+        <>
+        <img className="modal-pic" src={regPic} />
+        {errorPassword && <p>{errorPassword}</p>}
+        {errorRegister && <p>Username not available.</p>}
+        <form className="login-reg-form" onSubmit={handleSubmit}>
             <label htmlFor="login-username"></label>
             <input
                 onChange={handleChange}
                 value={fields.username}
+                maxLength="12"
                 name="username"
                 id="register-username"
                 type="text"
@@ -71,6 +80,7 @@ const CreateAccount = ({ setUser }) => {
             <input
                 onChange={handleChange}
                 value={fields.password}
+                maxLength="16"
                 name="password"
                 id="register-password"
                 type="Password"
@@ -88,14 +98,16 @@ const CreateAccount = ({ setUser }) => {
                 required={true}
                 onChange={handleChange}
                 value={fields.confirmPassword}
+                maxLength="16"
                 placeholder="Confirm Password" />
-                {errorPassword && <p className="text-muted">{errorPassword}</p>}
+                
         
 
-            <input id="regobut" className="login-input" type="submit" value="Create Account"/>
+            <input id="regobut" className="login-input" type="submit" value="Register"/>
               
 
         </form>
+        </>
 
     )
 }

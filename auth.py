@@ -84,7 +84,6 @@ def update():
     db.session.add(user)
     db.session.commit()
     db.session.refresh(user)
-    print(user)
     
     
 

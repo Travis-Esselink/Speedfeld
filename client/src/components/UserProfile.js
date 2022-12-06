@@ -1,23 +1,7 @@
 import Loading from "./Loading"
-import { useEffect, useState } from "react"
+import statsTitle from "../images/stats-title.png" 
 
-
-
-
-
-const UserProfile = ({user, userFetched}) => {
-    const [tests, setTests] = useState([])
-
-
-    useEffect(() => {
-        const getQuotes = async () => {
-          const res = await fetch('/api/usertests')
-          const data = await res.json()
-          setTests(data)
-        }
-        getQuotes()
-      }, [])
-
+const UserProfile = ({user, userFetched, tests, setTests}) => {
 
     const sumWPM = (array) => {
         let count = 0
@@ -30,21 +14,20 @@ const UserProfile = ({user, userFetched}) => {
 
     const averageWPM = (sumWPM(tests) / tests.length).toFixed(0)
 
-    console.log(tests)
-
-
-
     return (
-        <div>
-        { !userFetched ? <Loading /> :
         <>
-        <p>{user.username}</p>
-        <p>tests completed: {tests.length} </p>
-        <p>fastest test speed: {tests[0].WPM}</p>
-        <p>average wpm: {averageWPM} </p> 
+        { !userFetched || tests.length === 0 ? <Loading /> :
+        <>
+        <img className="modal-pic" src={statsTitle} />
+        <div className="stats-container">
+        <p className="stats">{user.username}</p>
+        <p className="stats">tests completed: {tests.length} </p>
+        <p className="stats">top score: {tests[0].WPM}</p>
+        <p className="stats">average wpm: {averageWPM} </p> 
+        </div>
         </>
-}
-        </div> 
+ }
+        </> 
     )
 
 }

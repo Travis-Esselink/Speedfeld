@@ -15,13 +15,13 @@ const LogoutButton = ({setUser}) => {
     }
 
     return (
-        <>
        
-            <a href="#" className="login-logout-button" onClick={handleClick}>
+       
+            <a id="logout" className="icon-button-link" href="#" onClick={handleClick}>
                 <img className="icon-logout" src={logoutPic} />
             </a>
        
-        </>
+       
     )
 }
 

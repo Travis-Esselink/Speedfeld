@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, forwardRef, useImperativeHandle } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
 import Login from './Login'
 
 const ModalLogin = forwardRef((props, ref) => {
@@ -59,7 +58,7 @@ const ModalLogin = forwardRef((props, ref) => {
                                 }
                             }}
                             onClick={(e) => {
-                                if (e.currentTarget === e.target || e.target.id === "login-username" || e.target.id === "login-password") {
+                                if (e.currentTarget === e.target || e.target.id === "login-username" || e.target.id === "loginbut" || e.target.id === "login-password" || e.target.className === "modal-content-wrapper" || e.target.className === "login-reg-form" || e.target.className === "modal-content") {
                                     e.stopPropagation()
                                 } 
                         
@@ -90,7 +89,7 @@ const ModalLogin = forwardRef((props, ref) => {
                                
                                 className="modal-content">
 
-                                <Login setUser={props.setUser} />
+                                <Login setUser={props.setUser} setOpenLogin={setOpenLogin} />
 
                             </motion.div>
 

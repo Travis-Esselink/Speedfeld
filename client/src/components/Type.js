@@ -4,14 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import LogoutButton from './LogoutButton'
 import ModalReg from './ModalReg'
 import ModalLogin from './ModalLogin'
+import ModalLeaderboard from './ModalLeaderboard';
+import ModalProfile from './ModalProfile';
 import Loading from './Loading'
 import sketch from '../images/sketch.png'
 import mainLogo from '../images/TYPERUNNER2.png'
 import bwLogo from '../images/TRBW.png'
-import loginPic from "../images/log-in.png"
+import loginIcon from "../images/log-in.png"
 import reload from "../images/reload.png"
 import signUp from "../images/signup.png"
+import crownIcon from "../images/crown.png"
+import profileIcon from "../images/profile-user.png"
+
+
+
 import _ from 'lodash'
+const FocusTrap = require('focus-trap-react');
 
 const Type = ({ quotes, user, setUser, userFetched }) => {
     const [finished, setFinished] = useState(false)
@@ -87,7 +95,7 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     const totalTime = Number(`${min * 60 + sec}.${mili}`)
     const dynamicWPM = ((fieldList.length / 5) / (totalTime / 60)).toFixed(0)
     const finalWPM = ((quoteList.length / 5) / (totalTime / 60)).toFixed(0)
-// add test result to tests table
+    // add test result to tests table
     const updateUserTests = async () => {
         const res = await fetch('/api/updatetests', {
             method: "POST",
@@ -102,7 +110,6 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
         })
         const data = await res.json()
         navigate('/')
-        console.log(data)
     }
 
     // CHECK IF COMPLETED
@@ -129,12 +136,20 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
 
     const modalRegRef = useRef()
     const modalLoginRef = useRef()
-    const modalStatsRef = useRef()
+    const modalProfRef = useRef()
     const modalLeaderRef = useRef()
     const inputRef = useRef(null)
 
 
-    console.log(user)
+    const [tests, setTests] = useState([])
+
+
+
+    const getTests = async () => {
+        const res = await fetch('/api/usertests')
+        const data = await res.json()
+        setTests(data)
+    }
 
     return (
         <>
@@ -146,29 +161,43 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
             <>
 
 
-                <ModalReg ref={modalRegRef} user={user} setUser={setUser}><p>Hello world</p></ModalReg>
+                <ModalReg ref={modalRegRef} user={user} setUser={setUser}></ModalReg>
                 <ModalLogin ref={modalLoginRef} user={user} setUser={setUser} userFetched={userFetched}></ModalLogin>
+                <ModalLeaderboard ref={modalLeaderRef}></ModalLeaderboard>
+                <ModalProfile ref={modalProfRef} user={user} setUser={setUser} userFetched={userFetched} tests={tests}></ModalProfile>
 
 
 
                 <div className="main-container">
                     <div className="logo-div">
                         <img className='main-logo' src={bwLogo} />
+                        {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
                     </div>
                     <div className="buttons-div">
-                        {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
-                        {userFetched && user && <LogoutButton user={user} setUser={setUser} />}
-                        {!user && <a id="login" className="login-logout-button" href="#" onClick={() => modalLoginRef.current.openLogin()}>
-                            <img className="icon-login" src={loginPic} />
+
+                        {userFetched && user && <LogoutButton user={user} setUser={setUser} />
+                        }
+                        {!user && <a id="login" className="icon-button-link" href="#" onClick={() => modalLoginRef.current.openLogin()}>
+                            <img className="icon-login" src={loginIcon} />
                         </a>}
-                        {!user && <a id="register" className="login-logout-button" href="#" onClick={() => modalRegRef.current.openRegister()}>
+                        {!user && <a id="register" className="icon-button-link" href="#" onClick={() => modalRegRef.current.openRegister()}>
                             <img className="icon-signup" src={signUp} />
                         </a>}
+                        {userFetched && user && <a id="profile" className="icon-button-link" href="#" onClick={() => { modalProfRef.current.openProfile(); getTests() }}>
+                            <img className="icon-profile" src={profileIcon} />
+                        </a>}
+                        <a id="leaderboard" className="icon-button-link" href="#" onClick={() => modalLeaderRef.current.openLeaderboard()}>
+                            <img className="icon-leader" src={crownIcon} />
+                        </a>
+
+
+
+
                     </div>
 
                     <div className="timer-wpm">
-                        {isActive && <p className="WPM"> {finished === true ? finalWPM : dynamicWPM} wpm</p>}
-                        {isActive && <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span> {(Math.floor((time / 1000) % 60))}.<span className="smalltime">{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>}
+                        {isActive && <p className="WPM"> {finished === true ? finalWPM : dynamicWPM}<span className="smalltime">wpm</span></p>}
+                        {isActive && <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span>{(Math.floor((time / 1000) % 60))}<span className="smalltime">.{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>}
                     </div>
 
                     <div className="words-container">
@@ -176,14 +205,11 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
 
                             {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
                                 return (
-                                    <>
-                                        <letter className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : letter === " " && fieldList[letterIndex] === undefined || null ? "space" : fieldList[letterIndex] === undefined || null ? "" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
-                                            {letter}
-                                        </letter>
-                                        {letter[letterIndex + 1] === " " && <div></div>}
 
-                                    </>
-
+                                    <section key={letterIndex} className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : letter === " " && fieldList[letterIndex] === undefined || null ? "space" : fieldList[letterIndex] === undefined || null ? "letter" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
+                                        {letter}
+                                        {/* {letter[letterIndex + 1] === " " && <div></div>} possibly add later to make sure line breaks only happen on spaces? */}
+                                    </section>
                                 )
                             })}
 
@@ -192,32 +218,28 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
                         <div className="author">
                             <p> - {quote.author}</p>
                         </div>
-
+                        
                     </div>
-                    <input autoFocus className="text-box" ref={inputRef} id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} onPaste={(e)=>{e.preventDefault()}} />
-                    <div className="blur"></div>
-                    <a href="#" className="reset-button" onClick={SelectQuote}>
-                        <img className="icon-reset" src={reload} />
-                    </a>
-                    <div className="image-div">
-                        {/* <img className="sketch-img" src={sketch} /> */}
+                    
+                        <input autoFocus className="text-box" ref={inputRef} id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} onPaste={(e) => { e.preventDefault() }} />
+                        <div className="blur"></div>
+                        {/* <FocusTrap> */}
+                    <div id="focus-trap-div">
+                        <a href="#" className="reset-button" onClick={SelectQuote}>
+                            <img className="icon-reset" src={reload} />
+                        </a>
                     </div>
+                    {/* </FocusTrap> */}
+            </div>
 
-                </div>
+        </>
 
-            </>
-            {/* } */}
         </>
     )
 }
 
 export default Type
 
-// letterstate = array  no of elements should be same number as quotelist
-// each element in letterstate  = true or false 
-// set state by index, set conditional classname by index
-
-//active char set classname on letterdiv
 
 
 

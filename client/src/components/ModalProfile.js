@@ -1,22 +1,26 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, forwardRef, useImperativeHandle } from 'react'
-import Register from './Register'
+import UserProfile from "./UserProfile"
 
-const ModalReg = forwardRef((props, ref) => {
-    const [openReg, setOpenReg] = useState(false)
+const ModalProfile = forwardRef((props, ref) => {
+    const [openProf, setOpenProf] = useState(false)
+
+   
 
     useImperativeHandle(ref, () => {
         return {
-            openRegister: () => setOpenReg(true),
-            closeRegister: () => setOpenReg(false),
+            openProfile: () => setOpenProf(true)
+            ,
+            closeProfile: () => setOpenProf(false),
         }
     })
+
 
     return (
         <>
 
             <AnimatePresence>
-                {openReg &&
+                {openProf &&
 
                     <>
 
@@ -36,7 +40,7 @@ const ModalReg = forwardRef((props, ref) => {
                                     delay: 0.3
                                 }
                             }}
-                            onClick={() => setOpenReg(false)}
+                            onClick={() => setOpenProf(false)}
                             className="modal-backdrop">
 
                             <motion.div
@@ -56,7 +60,7 @@ const ModalReg = forwardRef((props, ref) => {
                                     },
                                 }}
                                 onClick={(e) => {
-                                    if (e.currentTarget === e.target || e.target.id === "regobut" || e.target.id === "register-username" || e.target.id ===  "register-password" || e.target.id === "register-confirm-password" || e.target.className === "modal-content-wrapper" || e.target.className === "modal-content" || e.target.className === "login-reg-form") {
+                                    if (e.currentTarget === e.target || e.target.className === "modal-content-wrapper" || e.target.className === "modal-content" || e.target.className === "stats-container" || e.target.className === "stats") {
                                         e.stopPropagation()
                                     } 
                             
@@ -89,7 +93,7 @@ const ModalReg = forwardRef((props, ref) => {
                                     }}
                                     className="modal-content">
 
-                                    <Register user={props.user} setUser={props.setUser} setOpenReg={setOpenReg} />
+                                    <UserProfile user={props.user} userFetched={props.user} tests={props.tests} setTests={props.setTests}/>
 
                                 </motion.div>
 
@@ -105,4 +109,4 @@ const ModalReg = forwardRef((props, ref) => {
 }
 )
 
-export default ModalReg
+export default ModalProfile

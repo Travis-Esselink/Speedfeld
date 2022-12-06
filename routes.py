@@ -44,11 +44,19 @@ def show_tests():
     current_user = session.get('current_user', None)
     user_tests = Tests.query.filter(Tests.user_id == current_user["id"]).order_by(Tests.WPM.desc())
     test_dicts = [test.to_dict() for test in user_tests]
-    print(test_dicts)
+
 
 
     return jsonify(test_dicts)
 
 
+@routes_router.route('/api/leaderboard')
+def leaderboard():
+    subq = Tests.query.distinct(Tests.user_id).order_by(Tests.user_id, Tests.WPM.desc()).subquery()
+    top_tests = Tests.query.select_entity_from(subq).order_by(Tests.WPM.desc()).limit(10)
+    top_test_dicts = [test.to_dict() for test in top_tests]
 
+
+
+    return jsonify(top_test_dicts)
 
