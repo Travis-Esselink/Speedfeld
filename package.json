@@ -1,1 +1,6 @@
-{}
+{
+      "scripts": {
+      "heroku-postbuild": "cd client && npm i && npm run build"
+    }
+  }
+  

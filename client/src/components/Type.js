@@ -152,89 +152,84 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
     }
 
     return (
+
         <>
-            <div id="stars"></div>
-            <div id="stars2"></div>
-            <div id="stars3"></div>
 
 
-            <>
-
-
-                <ModalReg ref={modalRegRef} user={user} setUser={setUser}></ModalReg>
-                <ModalLogin ref={modalLoginRef} user={user} setUser={setUser} userFetched={userFetched}></ModalLogin>
-                <ModalLeaderboard ref={modalLeaderRef}></ModalLeaderboard>
-                <ModalProfile ref={modalProfRef} user={user} setUser={setUser} userFetched={userFetched} tests={tests}></ModalProfile>
+            <ModalReg ref={modalRegRef} user={user} setUser={setUser}></ModalReg>
+            <ModalLogin ref={modalLoginRef} user={user} setUser={setUser} userFetched={userFetched}></ModalLogin>
+            <ModalLeaderboard ref={modalLeaderRef}></ModalLeaderboard>
+            <ModalProfile ref={modalProfRef} user={user} setUser={setUser} userFetched={userFetched} tests={tests}></ModalProfile>
 
 
 
-                <div className="main-container">
-                    <div className="logo-div">
-                        <img className='main-logo' src={bwLogo} />
-                        {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
+            <div className="main-container">
+                <div className="logo-div">
+                    <img className='main-logo' src={bwLogo} />
+                    {userFetched && user && <div className="icon-status">Logged in as: {user.username} </div>}
+                </div>
+                <div className="buttons-div">
+
+                    {userFetched && user && <LogoutButton user={user} setUser={setUser} />
+                    }
+                    {!user && <a id="login" className="icon-button-link" href="#" onClick={() => modalLoginRef.current.openLogin()}>
+                        <img className="icon-login" src={loginIcon} />
+                    </a>}
+                    {!user && <a id="register" className="icon-button-link" href="#" onClick={() => modalRegRef.current.openRegister()}>
+                        <img className="icon-signup" src={signUp} />
+                    </a>}
+                    {userFetched && user && <a id="profile" className="icon-button-link" href="#" onClick={() => { modalProfRef.current.openProfile(); getTests() }}>
+                        <img className="icon-profile" src={profileIcon} />
+                    </a>}
+                    <a id="leaderboard" className="icon-button-link" href="#" onClick={() => modalLeaderRef.current.openLeaderboard()}>
+                        <img className="icon-leader" src={crownIcon} />
+                    </a>
+
+
+
+
+                </div>
+
+                <div className="timer-wpm">
+                    {isActive && <p className="WPM"> {finished === true ? finalWPM : dynamicWPM}<span className="smalltime">wpm</span></p>}
+                    {isActive && <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span>{(Math.floor((time / 1000) % 60))}<span className="smalltime">.{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>}
+                </div>
+
+                <div className="words-container">
+                    <div className="words">
+
+                        {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
+                            return (
+
+                                <section key={letterIndex} className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : letter === " " && fieldList[letterIndex] === undefined || null ? "space" : fieldList[letterIndex] === undefined || null ? "letter" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
+                                    {letter}
+                                    {/* {letter[letterIndex + 1] === " " && <div></div>} possibly add later to make sure line breaks only happen on spaces? */}
+                                </section>
+                            )
+                        })}
+
                     </div>
-                    <div className="buttons-div">
 
-                        {userFetched && user && <LogoutButton user={user} setUser={setUser} />
-                        }
-                        {!user && <a id="login" className="icon-button-link" href="#" onClick={() => modalLoginRef.current.openLogin()}>
-                            <img className="icon-login" src={loginIcon} />
-                        </a>}
-                        {!user && <a id="register" className="icon-button-link" href="#" onClick={() => modalRegRef.current.openRegister()}>
-                            <img className="icon-signup" src={signUp} />
-                        </a>}
-                        {userFetched && user && <a id="profile" className="icon-button-link" href="#" onClick={() => { modalProfRef.current.openProfile(); getTests() }}>
-                            <img className="icon-profile" src={profileIcon} />
-                        </a>}
-                        <a id="leaderboard" className="icon-button-link" href="#" onClick={() => modalLeaderRef.current.openLeaderboard()}>
-                            <img className="icon-leader" src={crownIcon} />
-                        </a>
-
-
-
-
+                    <div className="author">
+                        <p> - {quote.author}</p>
                     </div>
 
-                    <div className="timer-wpm">
-                        {isActive && <p className="WPM"> {finished === true ? finalWPM : dynamicWPM}<span className="smalltime">wpm</span></p>}
-                        {isActive && <p className="timer">{(Math.floor((time / 60000) % 60))}<span className="smalltime">min</span>{(Math.floor((time / 1000) % 60))}<span className="smalltime">.{("0" + ((time / 10) % 100)).slice(-2)}sec</span></p>}
-                    </div>
+                </div>
 
-                    <div className="words-container">
-                        <div className="words">
-
-                            {quoteListWords.join(" ").split("").map((letter, letterIndex) => {
-                                return (
-
-                                    <section key={letterIndex} className={fieldList.length === letterIndex ? "current" : fieldList[letterIndex] === letter ? "correct" : letter === " " && fieldList[letterIndex] === undefined || null ? "space" : fieldList[letterIndex] === undefined || null ? "letter" : fieldList[letterIndex] !== letter && letter === " " ? "space-incorrect" : "incorrect"} >
-                                        {letter}
-                                        {/* {letter[letterIndex + 1] === " " && <div></div>} possibly add later to make sure line breaks only happen on spaces? */}
-                                    </section>
-                                )
-                            })}
-
-                        </div>
-
-                        <div className="author">
-                            <p> - {quote.author}</p>
-                        </div>
-                        
-                    </div>
-                    
-                        <input autoFocus className="text-box" ref={inputRef} id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} onPaste={(e) => { e.preventDefault() }} />
-                        <div className="blur"></div>
-                        {/* <FocusTrap> */}
-                    <div id="focus-trap-div">
-                        <a href="#" className="reset-button" onClick={SelectQuote}>
-                            <img className="icon-reset" src={reload} />
-                        </a>
-                    </div>
-                    {/* </FocusTrap> */}
+                <input autoFocus className="text-box" ref={inputRef} id="message-input" type="text" autoComplete="off" value={field} onChange={handleChange} disabled={finished === true ? true : false} onPaste={(e) => { e.preventDefault() }} />
+                <div className="blur"></div>
+                {/* <FocusTrap> */}
+                <div id="focus-trap-div">
+                    <a href="#" className="reset-button" onClick={SelectQuote}>
+                        <img className="icon-reset" src={reload} />
+                    </a>
+                </div>
+                {/* </FocusTrap> */}
             </div>
 
         </>
 
-        </>
+
     )
 }
 
