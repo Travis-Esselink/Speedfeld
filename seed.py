@@ -52,7 +52,6 @@ bladerunner_quotes = [
         "quote": "Quite an experience to live in fear, isn't it? That's what it is to be a slave.",
         "author": "Batty"
     },
-
 ]
 
 
