@@ -12,10 +12,12 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if DATABASE_URL.startswith('postgres://'):
-    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
+# if DATABASE_URL.startswith('postgres://'):
+#     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
 db = SQLAlchemy(app)
 
@@ -30,3 +32,5 @@ import error_handlers
 @app.route('/<path:path>')
 def serve_react_app(path):
     return render_template('index.html')
+
+# test
