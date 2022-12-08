@@ -33,4 +33,4 @@ import error_handlers
 def serve_react_app(path):
     return render_template('index.html')
 
-# test
+print(DATABASE_URL)

@@ -414,10 +414,34 @@ form h3 {
 
 #loginbut {
   width: 50%;
+  box-shadow: 0 6px rgb(60, 60, 60);
+}
+
+#loginbut:hover {
+  background-color: rgba(255, 255, 255, 0.492);
+}
+
+#loginbut:active {
+  width: 50%;
+  box-shadow: 0 3px rgb(60, 60, 60);
+  transform: translateY(4px);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 #regobut {
   width: 50%;
+  box-shadow: 0 6px rgb(60, 60, 60);
+}
+
+#regobut:hover {
+  background-color: rgba(255, 255, 255, 0.492);
+}
+
+#regobut:active {
+  width: 50%;
+  box-shadow: 0 3px rgb(60, 60, 60);
+  transform: translateY(4px);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 ::placeholder {
