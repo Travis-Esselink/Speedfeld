@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import logoutPic from "../images/logout.png"
 
 
-const LogoutButton = ({setUser}) => {
+const LogoutButton = ({setUser, SelectQuote}) => {
 
     const navigate = useNavigate()
     const handleClick = async () => {
@@ -12,6 +12,7 @@ const LogoutButton = ({setUser}) => {
         const data = await res.json()
         setUser(null)
         navigate("/")
+        SelectQuote()
     }
 
     return (

@@ -170,7 +170,7 @@ const Type = ({ quotes, user, setUser, userFetched }) => {
                 </div>
                 <div className="buttons-div">
 
-                    {userFetched && user && <LogoutButton user={user} setUser={setUser} />
+                    {userFetched && user && <LogoutButton user={user} setUser={setUser} SelectQuote={SelectQuote}/>
                     }
                     {!user && <a id="login" className="icon-button-link" href="#" onClick={() => modalLoginRef.current.openLogin()}>
                         <img className="icon-login" src={loginIcon} />
