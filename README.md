@@ -2,7 +2,7 @@
 
 A typing speed Typing speed test application with emphasis on smooth clean design, smooth/intuitive interface and frontend performance. “Type Runner” uses a database of Blade Runner quotes to assist users in practicing their typing speed.  
 
-### Check out the app [here](typerunner.herokuapp.com). 
+### Check out the app [here](https://typerunner.herokuapp.com). 
 Login using default credentials or feel to create a new account and try get your name on the scoreboard! 
 
 ![](https://i.imgur.com/qCTu2hR.png)
